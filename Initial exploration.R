@@ -86,11 +86,24 @@ Floors <- c("0" = "Floor 0",
             "3" = "Floor 3",
             "4" = "Floor 4")
 
-# Plot
+# Create a vector of Labels for building to use in facet_grid below
+Building <- c("0" = "Building 0",
+              "1" = "Building 1", 
+              "2" = "Building 2")
+
+
+
+# Plot showing the distribution of WAPs detected per building
 ggplot(data2, aes(x = DetectedWAPs)) + 
-  geom_bar(aes(fill = BUILDINGID)) + 
+  geom_bar(aes(fill = BUILDINGID), show.legend = FALSE) + 
   labs(title = "Number of WAPs detected", x = "Number of WAPs") +
-  facet_grid(FLOOR~., labeller = labeller(FLOOR = as_labeller(Floors)))
+  facet_grid(BUILDINGID~., labeller = labeller(BUILDINGID = as_labeller(Building)))
+
+
+#ggplot(data2, aes(x = DetectedWAPs)) + 
+#  geom_bar(aes(fill = BUILDINGID)) + 
+#  labs(title = "Number of WAPs detected", x = "Number of WAPs") +
+#  facet_grid(FLOOR~., labeller = labeller(FLOOR = as_labeller(Floors)))
 
 
 # WAPs with signal strength higher than -30 dBm
@@ -188,6 +201,7 @@ data %>%
   guides(fill = guide_legend(title = "Building")) + 
   labs(title = "Distribution of signal strength", x = "Signal strength (dBm)") -> plot1
 
+# Interactive plot
 ggplotly(plot1)
 
 
@@ -214,10 +228,6 @@ df %>%
 
 #--- Visualization room access ----
 
-# Labels for building to use in facet_grid below
-Building <- c("0" = "Building 0",
-              "1" = "Building 1", 
-              "2" = "Building 2")
 
 ## Graph of relative position, with panels for building and floor
 data2 %>% 
@@ -246,8 +256,8 @@ data2 %>%
                          ifelse(FLOOR == 3, "Floor 3",
                                 ifelse(FLOOR == 2, "Floor 2",
                                        ifelse(FLOOR == 1, "Floor 1", "Floor 0")))
-  )
-  ) %>% 
+                         )
+         ) %>% 
   ggplot(aes(x = LONGITUDE, y = LATITUDE, colour = BUILDINGID)) + 
   geom_point() +
   labs(title = "Recordings across buildings and floors",
@@ -284,10 +294,8 @@ summary(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC"))
 
 
 # How many days is this time period
-difftime(max(as.POSIXct(validation$TIMESTAMP, "%Y-%m-%d %H:%M:%S", 
-                        origin = "1970-01-01")), 
-         min(as.POSIXct(validation$TIMESTAMP, "%Y-%m-%d %H:%M:S%", 
-                        origin = "1970-01-01")), 
+difftime(max(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC")), 
+         min(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC")),
          units = "days")
 # Time difference of 19.32256 days
 
@@ -303,4 +311,5 @@ validation %>%
   guides(fill = guide_legend(title = "Building")) + 
   labs(x = "Signal strength (dBm)") -> plotValidation
 
+# Interactive plot
 ggplotly(plotValidation)
