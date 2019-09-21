@@ -137,13 +137,21 @@ filter(noSignalRows, BUILDINGID == 1) %>% select(LONGITUDE:TIMESTAMP) -> noSigna
 
 #--- Visualizations ----
 
+# Plot the longitude and the latitude
+
+ggplot(data, aes(x = LONGITUDE, y = LATITUDE)) + 
+  geom_point(aes(colour = BUILDINGID)) +
+  scale_colour_discrete(name = "Building") +
+  labs(title = "Universitat Jaume I", x = "Longitude", y = "Latitude")
+
+
 # Remove 0.5 ticks from Floor-axis
 zaxis <- list(autotick = TRUE,
               tick0 = 0,
               dtick = 1)
 
 
-# Plot the longitude and the latitude
+# Plot the longitude and the latitude in 3D with floor on z-axis
 
 # Plotly 3d
 plot_ly(data, x = ~LONGITUDE, y = ~LATITUDE, z = ~FLOOR, color = ~BUILDINGID,
@@ -199,10 +207,8 @@ data %>%
   
   ggplot(aes(x = Signal)) + geom_density(aes(fill = BUILDINGID), alpha = 0.5) + 
   guides(fill = guide_legend(title = "Building")) + 
-  labs(title = "Distribution of signal strength", x = "Signal strength (dBm)") -> plot1
+  labs(title = "Distribution of signal strength", x = "Signal strength (dBm)") 
 
-# Interactive plot
-ggplotly(plot1)
 
 
 # Graph for signal ranges per floor and building
@@ -309,7 +315,5 @@ validation %>%
   
   ggplot(aes(x = Signal)) + geom_density(aes(fill = BUILDINGID), alpha = 0.5) + 
   guides(fill = guide_legend(title = "Building")) + 
-  labs(x = "Signal strength (dBm)") -> plotValidation
-
-# Interactive plot
-ggplotly(plotValidation)
+  labs(title = "Distribution of signal strength for validation dataset", 
+       x = "Signal strength (dBm)")
