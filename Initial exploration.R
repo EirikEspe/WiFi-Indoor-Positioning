@@ -255,6 +255,15 @@ data2 %>%
 # building 2.
 
 
+# Proportion of captures taken inside or outside a room 
+round(prop.table(table(Building = data$BUILDINGID, 
+                       "Relative position" = data$RELATIVEPOSITION)), 3)
+
+# Sum proportion of captures taken inside or outside a room
+colSums(round(prop.table(table(data$BUILDINGID, data$RELATIVEPOSITION)), 3))
+# 16.6% of the captures are taken inside a room, while 83.4% of the captures 
+# are taken outside a room.
+
 
 # Plot showing recordings across buildings and floors
 data2 %>% 
@@ -297,6 +306,10 @@ validation[,c(523:528)] <- lapply(validation[, c(523:528)], as.factor)
 # Duration of time period for the validation dataset
 summary(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC"))
 # From 19/09/2013 to 08/10/2013
+
+
+# Summary of the validation dataset
+summary(validation[, c(1:3, 520:529)])
 
 
 # How many days is this time period
