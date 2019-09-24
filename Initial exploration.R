@@ -63,7 +63,7 @@ data %>%
 
 
 # Duration of time period for the training dataset
-summary(as.POSIXct(data$TIMESTAMP,origin="1970-01-01", tz = "UTC"))
+summary(as.POSIXct(data$TIMESTAMP, origin = "1970-01-01", tz = "UTC"))
 # 3 weeks (30/05/2013 to 20/06/2013)
 
 
@@ -129,7 +129,7 @@ noSignalRows %>% dplyr::mutate(Building = if_else(BUILDINGID == 0, "Building 0",
 
 # Pattern Building# 1, records with no signal
 noSignalRows$TIMESTAMP <- as.POSIXct(noSignalRows$TIMESTAMP, 
-                                     origin="1970-01-01", tz = "UTC")
+                                     origin = "1970-01-01", tz = "UTC")
 filter(noSignalRows, BUILDINGID == 1) %>% select(LONGITUDE:TIMESTAMP) -> noSignalPattern
 
 
@@ -303,20 +303,30 @@ str(validation[,c(1:3, 520:529)])
 validation[,c(523:528)] <- lapply(validation[, c(523:528)], as.factor)
 
 
+# Summary of the validation dataset
+summary(validation[, c(1:3, 520:529)])
+
+
 # Duration of time period for the validation dataset
 summary(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC"))
 # From 19/09/2013 to 08/10/2013
-
-
-# Summary of the validation dataset
-summary(validation[, c(1:3, 520:529)])
 
 
 # How many days is this time period
 difftime(max(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC")), 
          min(as.POSIXct(validation$TIMESTAMP, origin = "1970-01-01", tz = "UTC")),
          units = "days")
-# Time difference of 19.32256 days
+# Time difference of 19.32256 days (19 days, 7 hours, 44 minutes and 29 seconds)
+
+
+
+
+# Plot the longitude and the latitude
+ggplot(validation, aes(x = LONGITUDE, y = LATITUDE)) + 
+  geom_point(aes(colour = BUILDINGID)) +
+  scale_colour_discrete(name = "Building") +
+  labs(title = "Universitat Jaume I", subtitle = "Validation dataset", 
+       x = "Longitude", y = "Latitude")
 
 
 # Density plot of the validation dataset
