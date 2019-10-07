@@ -36,3 +36,15 @@ Each WiFi fingerprint can be characterized by the detected Wireless Access Point
 <sub> Attribute 527 (UserID): </sub> | <sub> User identifier (see below). Categorical integer values. </sub> |
 <sub> Attribute 528 (PhoneID):</sub> | <sub> Android device identifier (see below). Categorical integer values. </sub>|
 <sub> Attribute 529 (Timestamp): </sub> | <sub> UNIX Time when the capture was taken. Integer value. </sub> |
+
+<br />
+
+## Data preparation 
+
+To get accurate predictive models, we have to get our data in good shape for analysis. In order to get the data more
+consistent and remove noise, I have applied the following steps:
+
+- **Remove WAPs with no detected signal**
+- **Remove records with no detected signal**
+- **Convert values for signals that were not detected:** In the dataset a positive value of 100 was used if a WAP was not detected. When the WiFi signal strengths are given with values between 0 and -104, this will confuse the model. The values for no detected signals were converted from +100 to -105.
+- **Remove outliers:** Records(rows) with signal strength higher than -30 dBm were removed from the dataset. In general a signal strength of -30 dBm is considered a max achievable signal strength. With this signal the user can only be a few feet from the AP to achieve this. Not typical or desirable in the real world. Based on this information, I have removed records that contained signal strengths higher than -30 dBm, as I do not want to train my model on these records.
