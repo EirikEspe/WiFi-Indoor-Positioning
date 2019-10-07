@@ -1,14 +1,10 @@
 ################################################################
-#Ubiqum Code Academy
-#Data Analytics & Machine Learning
-
 #IoT Analytics
 #Evaluate Techniques for WiFi Locationing 
 
-# Model for determining which floor
+#Models for determining which floor
 
 #Created by Eirik Espe
-#Last edited 7 July 2019
 ################################################################
 
 source("Model for building.R")
@@ -265,7 +261,7 @@ rm(cl)
 
 
 #Save model
-saveRDS(mod_rfF1, file = "RFmodelFloor1.rds")
+saveRDS(mod_rfF1, file = "RFmodel1_Floor.rds")
 
 
 #Check results on the training set
@@ -712,7 +708,7 @@ mod_gbmF1 <- train(FLOOR~., data = trainingNorm %>%
 
 
 #Save model
-saveRDS(mod_gbmF1, file = "GBMmodelFloor1.rds")
+saveRDS(mod_gbmF1, file = "GBMmodel1_Floor.rds")
 
 
 #Check results on the training set

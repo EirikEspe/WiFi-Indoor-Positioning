@@ -505,6 +505,13 @@ postResample(test_resultsB_8th_svm, testingNorm$BUILDINGID)
 
 
 # Results on validation set
+
+## Normalized validation dataset
+ValidationNorm <- cbind(t(apply(select(validation_cleaned, 
+                                       starts_with('WAP')), 1, normalize)),
+                        validation_cleaned[,466:474])
+
+## Check predictions on validation data
 validation_resultsB_8th_svm <- predict(object = mod_svmB8,
                                        newdata = ValidationNorm)
 postResample(validation_resultsB_8th_svm, ValidationNorm$BUILDINGID)
