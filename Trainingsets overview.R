@@ -86,7 +86,7 @@ source("Pre-processing.R")
 
 
 
-#--- Training datasets for building ----
+#--- Training datasets for floors ----
 
 # trainingF <- is the first un-processed dataset, sampled by distribution 
 #              of floors.
@@ -99,4 +99,33 @@ source("Pre-processing.R")
 
 # in the rest of the training sets, I use the same training sets as for 
 # building.
+
+
+
+
+#--- Training datasets for floors - per building ----
+
+# trainingF_B0 <- Pre-processed data where information is extracted from building 0.
+
+
+# trainingF_B0sc <- Same as trainingF_B0, where the data has been scaled by row.
+
+
+
+
+# trainingF_B1 <- Pre-processed data where information is extracted from building 1.
+
+
+# trainingF_B1sc <- Same as trainingF_B1, where the data has been scaled by row.
+
+
+
+
+# trainingF_B2 <- Pre-processed data where information is extracted from building 2.
+
+
+# trainingF_B2sc <- Same as trainingF_B2, where the data has been scaled by row.
+
+
+
 
