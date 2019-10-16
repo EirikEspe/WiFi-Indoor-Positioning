@@ -9,7 +9,6 @@
 
 
 
-
 #--- Training datasets for building ----
 
  Training datasets for predictive models for building
@@ -125,6 +124,29 @@
 
 
  trainingF_B2sc <- Besides the elements in trainingF_B2, the data has been scaled by row.
+
+
+
+
+#--- Training datasets for longitude ----
+
+ trainingLon <- Un-processed dataset, sampled by distribution of longitude.
+
+
+ in the rest of the training sets, I use the same training sets as for 
+ building.
+
+
+
+
+#--- Training datasets for latitude ----
+
+ trainingLat <- Un-processed dataset, sampled by distribution of latitude.
+
+
+ in the rest of the training sets, I use the same training sets as for 
+ building.
+
 
 
 
