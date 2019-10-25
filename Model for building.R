@@ -159,9 +159,9 @@ postResample(test_resultsB_2nd_knn, testingB2$BUILDINGID)
 
 
 # Results on validation set
-validation_resultsB_1st_knn <- predict(object = mod_knnB2, 
+validation_resultsB_2nd_knn <- predict(object = mod_knnB2, 
                                        newdata = validation_cleaned)
-postResample(validation_resultsB_1st_knn, validation_cleaned$BUILDINGID)
+postResample(validation_resultsB_2nd_knn, validation_cleaned$BUILDINGID)
 # Accuracy  99.28 %
 # Kappa     0.9886
 
