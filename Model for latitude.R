@@ -249,3 +249,35 @@ postResample(validation_resultsLat_1st_rf, ValidationNorm$LATITUDE)
 # R2    98.51 %
 # MAE   6.105
 
+
+
+#--- 1st GBM Training model----
+
+# Train a GBM model using the training set that has been scaled by row, adding 
+# predictions for building to the data and removing five WAPs
+mod_gbmLat1 <- train(LATITUDE~., data = trainingNorm %>% 
+                       select(LATITUDE, starts_with("WAP"), PredBuilding,
+                              -c(WAP084, WAP085, WAP184, WAP248, WAP286)),
+                     method = "gbm",
+                     trControl = Control, 
+                     tuneLength = 5,
+                     verbose = FALSE)
+
+
+#---Results 1st GBM model----
+
+#Check results on the training set
+train_resultsLat_1st_gbm <- predict(object = mod_gbmLat1, newdata = trainingNorm)
+postResample(train_resultsLat_1st_gbm, trainingNorm$LATITUDE)
+# RMSE  6.609
+# R2    99.02 %
+# MAE   5.131
+
+
+# Results on validation set
+validation_resultsLat_1st_gbm <- predict(object = mod_gbmLat1, 
+                                         newdata = ValidationNorm)
+postResample(validation_resultsLat_1st_gbm, ValidationNorm$LATITUDE)
+# RMSE  11.715
+# R2    97.49 %
+# MAE   8.637
