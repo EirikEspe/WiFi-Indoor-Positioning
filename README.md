@@ -44,9 +44,67 @@ Each WiFi fingerprint can be characterized by the detected Wireless Access Point
 To get accurate predictive models, we have to get our data in good shape for analysis. In order to get the data more
 consistent and remove noise, I have applied the following steps:
 
-- **Remove WAPs with no detected signal**
-- **Remove records with no detected signal**
+- **Remove WAPs with no detected signal:** Columns where no signals were detected, i.e. columns where all signal strengths displayed a positive value of 100, were removed. When all values in the column has the same value, this makes the predictor uninformative and not useful to make predictions.
+- **Remove records with no detected signal:** Similarly, it is hard to learn from records where no signals where detected. Therefore, rows with no detected signals were removed.
 - **Convert values for signals that were not detected:** In the dataset a positive value of 100 was used if a WAP was not detected. When the WiFi signal strengths are given with values between 0 and -104, this will confuse the model. The values for no detected signals were converted from +100 to -105.
 - **Remove outliers:** Records(rows) with signal strength higher than -30 dBm were removed from the dataset. In general a signal strength of -30 dBm is considered a max achievable signal strength. With this signal the user can only be a few feet from the AP to achieve this. Not typical or desirable in the real world. Based on this information, I have removed records that contained signal strengths higher than -30 dBm, as I do not want to train my model on these records.
 - **Normalize by row:**  In order to make a prediction model, it is preferable to have input that are on the same scale. 
 In this case all the signal strengths are measured on the same scale, buth the magnitude ranges from -30 dBm to -105dBm. To prevent these magnitude differences biasing our model, I have applied normalization by row (min-max scaling).
+- **Remove WAPs that were creating interference:** In cases where WAPs were providing signals to several buildings, these WAPs were removed from the training model. 
+
+
+---
+## Results
+
+### Building
+The first step in the creation of training models was to predict which building a user was located in, based on the signal strength received by the WAPs. With this input my training models achieved these performance metrics on the validation set: 
+
+| Algorithm | Accuracy | Kappa  |
+| --------- | :------: | :----: |
+| 1st kNN   | 97.48 %  | 0.9604 |
+| 2nd kNN   | 99.28 %  | 0.9886 |
+| Best SVM  | 100 %    |   1    |
+
+### Floors
+
+For the predictive models for floors, I started out with creating models that looked at all buildings in the prediction of which floor a user was located in. These models got the following performance metrics on the validation set:
+
+| Algorithm | Accuracy | Kappa  |
+| --------- | :------: | :----: |
+| 1st kNN   | 69.31 %  | 0.5919 |
+| Best kNN  | 90.91 %  | 0.8733 |
+| Best SVM  | 92,71 %  | 0.8984 |
+| Best GBM  | 93.88 %  | 0.9137 |
+
+The 1st kNN model was created on un-processed data. The other models were created with the pre-processing outlined in the *Data Preparation* section. As you can see, the  predictions were not horrible, with almost 94 % correct classifications with the gradient boosting machine (GBM) model. However, it is possible to improve our results by zooming in on the individual buildings.
+
+Using the predictions for building, we could filter by building and optimize our model per building. With predictive models for floor per building, the following performance metrics was obtained:
+#### Floors - per building
+
+|     Algorithm        | Accuracy | Kappa  |
+|    -----------       | :------: | :----: |
+|**Floor - Building 0**|          |        |
+| Best RF              | 96.45 %  | 0.9498 |
+| Best kNN             | 97.39 %  | 0.9631 |
+| Best SVM             | 97,76 %  | 0.9683 |
+| Best GBM             | 96.08 %  | 0.9445 |
+|                      |          |        |
+|**Floor - Building 1**|          |        |
+| Best kNN             | 78.50 %  | 0.6910 |
+| Best SVM             | 89.25 %  | 0.8409 |
+| Best GBM             | 93.16 %  | 0.8983 |
+|                      |          |        |
+|**Floor - Building 2**|          |        |
+| Best kNN             | 92.54 %  | 0.8986 |
+| Best SVM             | 94.40 %  | 0.9238 |
+| Best GBM             | 96.64 %  | 0.9543 |
+
+<br />
+
+|   Combining the best models for floor  per building        | Accuracy | Kappa  |
+|  ---------------------------------------------------       | :------: | :----: |
+|SVM for Building 0 + GBM for Building 1 + GBM for Building 2| 96.22 %  |  0.947 |
+
+Zooming in on the individual buildings I got 96.22 % correct classifications for floors.
+
+### Longitude
