@@ -18,7 +18,7 @@ Universitat Jaume I, with 4 or 5 floor depending on the building and covers a su
 
 The database consists of 2 files, one containing 19 937 training/reference records ```trainingData.csv``` and other containing 1111 validation/test records ```validationData.csv```. Both sets are composed of 529 attributes and are described below.
 
-Each WiFi fingerprint can be characterized by the detected Wireless Access Points (WAPs) and the corresponding Received Signal Strength Intensity (RSSI). The intensity values are represented as negative integer values ranging from -104 dBm (extremely poor signal) to 0 dBm. The positive value 100 is used to denote when a WAP was not detected. During the database creation, 520 different WAPs were detected. Thus, the WiFi fingerprint is composed by 520 intensity values.
+Each WiFi fingerprint can be characterized by the detected Wireless Access Points (WAPs) and the corresponding Received Signal Strength Intensity (RSSI). The intensity values are represented as negative integer values ranging from -104 dBm (extremely poor signal) to 0 dBm. The unit **dBm** stands for **decibels relative to a milliwatt**, and is a power ratio that is expressed on a logaritmic scale. The positive value 100 is used to denote when a WAP was not detected. During the database creation, 520 different WAPs were detected. Thus, the WiFi fingerprint is composed by 520 intensity values.
 
 #### Attribute information:
 
@@ -38,6 +38,10 @@ Each WiFi fingerprint can be characterized by the detected Wireless Access Point
 <sub> Attribute 529 (Timestamp): </sub> | <sub> UNIX Time when the capture was taken. Integer value. </sub> |
 
 <br />
+
+Below you can see the distribution of the received signal strengths for detected records in the training set.
+
+<img src="https://github.com/EirikEspe/WiFi-Indoor-Positioning/blob/master/plot_distribution_of_signal_strength.png" width = "600">
 
 ## Data preparation 
 
@@ -108,3 +112,36 @@ Using the predictions for building, we could filter by building and optimize our
 Zooming in on the individual buildings I got 96.22 % correct classifications for floors.
 
 ### Longitude
+
+To locate a user we also need to find their position inside the building. To do this, we can use longitude and latitude.
+
+In the prediction of longitude, our performance measures changes from classification based metrics to regression based metrics. This follows from that we now will focus on the position of the users inside the campus. We are moving from measuring the percentage of correct classifications, to measure how far our predicted positions differ from the actual position of the users.  
+I use MAE (mean absolute error) as the main performance metric, as I am interested in the average magnitude of the errors to get a picture of their size. Using MAE, the individual errors get an equal weight, in contrast to RMSE where larger errors are penalized.
+
+The following metrics were obtained for longitude:
+
+| Algorithm |    MAE   | R<sup>2<sup/>  |  RMSE  |
+| --------- | :------: |     :----:     | :----: |
+| 1st kNN   |  13.561  |     94.30 %    | 28.929 |
+| Best RF   |   6.692  |     99.40 %    |  9.456 |
+| Best GBM  |   9.331  |     98.96 %    | 12.349 |
+| Best kNN  |   5.467  |     99.56 %    |  8.033 |
+  
+As we can see, I got the best performance with the kNN algorithm.
+
+### Latitude
+
+To locate a user we also need to find their latitude. Combining longitude and latitude, we can pinpoint a user's position inside the building. In the table below you can find my performance metrics for latitude.
+
+| Algorithm |    MAE   | R<sup>2<sup/>  |  RMSE  |
+| --------- | :------: |     :----:     | :----: |
+| 1st kNN   |  10.799  |     91.36 %    | 20.819 |
+| Best RF   |   6.105  |     98.51 %    |  8.989 |
+| Best GBM  |   8.637  |     97.49 %    | 11.715 |
+| Best kNN  |   5.127  |     98.83 %    |  7.645 |
+  
+The best performing algorithm for my latitude prediction was kNN.
+
+Now we can plot the predictions and compare against the actual positions.
+
+<img src="https://github.com/EirikEspe/WiFi-Indoor-Positioning/blob/master/plot_predicted_vs_actual_long_lat.png" width = "700">
